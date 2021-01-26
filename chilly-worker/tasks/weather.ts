@@ -22,46 +22,51 @@ export const query = async () => {
     let result = [];
     for await (let { name, limit } of config.cities) {
         let queryURL = `${config.apiURL}&q=${name}`;
-        console.log(queryURL);
         try {
             let response = await axios.get(queryURL);
-            // Process data
-            // API return temp in 3-hour-period, we group them by day
-            let tempByDay = response.data.list.reduce((tempArray: { [x: string]: any; }, dataPoint: { dt_txt: string; main: { temp: any; }; }) => {
-                const day = dataPoint.dt_txt.split(' ')[0];
-                tempArray[day] = [...tempArray[day] || [], dataPoint.main.temp];
-                return tempArray;
-            }, {});
-            console.log(tempByDay);
-
-            // Loop through the tempByDay object, check if any day has temp lower than limit
-            let coldWarningByDay: { [date: string]: boolean; } = {};
-            console.log('process coldWarningByDay');
-            Object.keys(tempByDay).forEach((date: string) => {
-                console.log(date);
-                console.log(tempByDay[date]);
-                const isCold = tempByDay[date].some((temp: number) => {
-                    return temp < limit
-                });
-
-                console.log(isCold);
-
-                coldWarningByDay[date] = isCold;
-
-                console.log('current value');
-                console.log(coldWarningByDay);
-            });
+            // Process City data
+            let cityData = processCityData(response.data.list, name, limit);
             // Return result
-            result.push({
-                city: name,
-                limit: limit,
-                temperature: tempByDay,
-                coldWarning: coldWarningByDay
-            })
+            result.push(cityData);
         } catch (err) {
             console.log(err)
         }
     };
-    console.log(result);
     return result;
 };
+
+/**
+ * Group temperature data by day
+ * Check if lower temperature limit is exceeded in any day.
+ * @param data {string} city temperature data by 3 hour interval.
+ * @param city {string} The city name.
+ * @param limit {number} The lower temp limit.
+ * 
+ * @return {Object} Object with temperature groupped by day
+ *                  and cold-warning day.
+ */
+export const processCityData = (data: any[], cityName: string, limit: number) => {
+    // API return temp in 3-hour-period, we group them by day
+    let tempByDay = data.reduce((tempArray: { [x: string]: any; }, dataPoint: { dt_txt: string; main: { temp: any; }; }) => {
+        const day = dataPoint.dt_txt.split(' ')[0];
+        tempArray[day] = [...tempArray[day] || [], dataPoint.main.temp];
+        return tempArray;
+    }, {});
+
+    // Loop through the tempByDay object, check if any day has temp lower than limit
+    let coldWarningByDay: { [date: string]: boolean; } = {};
+    Object.keys(tempByDay).forEach((date: string) => {
+        const isCold = tempByDay[date].some((temp: number) => {
+            return temp < limit
+        });
+
+        coldWarningByDay[date] = isCold;
+
+    });
+    return {
+        city: cityName,
+        limit: limit,
+        temperature: tempByDay,
+        coldWarning: coldWarningByDay
+    }
+}

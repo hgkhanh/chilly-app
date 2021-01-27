@@ -45,6 +45,11 @@ weather.get('/', (req, res) => {
  *                  contain an array of all city data
  */
 export const filterByCity = (data: string, city: string = '') => {
+    if (data.length === 0) {
+        return {
+            data: []
+        }
+    }
     let resultArray = JSON.parse(data);
     // Filter by city
     if (city.length > 0) {

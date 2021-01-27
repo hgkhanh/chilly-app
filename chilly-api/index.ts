@@ -1,5 +1,5 @@
 import express from 'express';
-import * as weather from './routes/weatherRoutes';
+import weather from './routes/weather';
 
 const app = express();
 const port = 5000;
@@ -9,6 +9,6 @@ const port = 5000;
  * GET /weather
  * Which return cold warning for a given city
  */
-weather.register(app);
+app.use('/weather', weather);
 
-app.listen(port, () => console.log(`Running on port ${port}`))
+app.listen(port, () => console.log(`Running on port ${port}`));

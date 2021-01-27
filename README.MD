@@ -14,6 +14,11 @@ cd chilly-app
 npm install typescript -g
 npm install
 ```
+Create .env file with Weather API Key. You can get one at [openweathermap.org](https://openweathermap.org/)
+```
+#.env file
+API_KEY=<your_api_key>
+```
 This app use [PM2](https://github.com/Unitech/pm2), aproduction process manager make it easy to run and monitor the two services.
 ```
 npm install pm2 -g

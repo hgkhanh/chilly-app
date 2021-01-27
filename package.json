@@ -1,0 +1,21 @@
+{
+  "name": "chilly-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "(cd api && npm install); (cd worker && npm install);",
+    "start": "(cd worker && tsc && pm2 start dist/index.js); (cd api && tsc && pm2 start dist/index.js); (pm2 monit);"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hgkhanh/chilly-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hgkhanh/chilly-app/issues"
+  },
+  "homepage": "https://github.com/hgkhanh/chilly-app#readme"
+}

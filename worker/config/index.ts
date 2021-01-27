@@ -7,7 +7,9 @@ interface Config {
     cities: Array<CityConfig>,
     cronSchedule: string
 }
-
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
 let config: Config = require('./development');
 
 if (process.env.NODE_ENV === 'production') {

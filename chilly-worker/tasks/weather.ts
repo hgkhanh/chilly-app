@@ -20,7 +20,7 @@ import config from '../config';
 export const query = async () => {
     // Get the list of city names
     let result = [];
-    for await (let { name, limit } of config.cities) {
+    for (let { name, limit } of config.cities) {
         let queryURL = `${config.apiURL}&q=${name}`;
         try {
             let response = await axios.get(queryURL);
@@ -29,7 +29,8 @@ export const query = async () => {
             // Return result
             result.push(cityData);
         } catch (err) {
-            console.log(err)
+            console.log(err);
+            return [];
         }
     };
     return result;

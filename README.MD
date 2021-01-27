@@ -10,6 +10,7 @@ git clone https://github.com/hgkhanh/chilly-app
 ```
 Install dependencies
 ```
+cd chilly-app
 npm install
 ```
 This app use [PM2](https://github.com/Unitech/pm2), aproduction process manager make it easy to run and monitor the two services.
